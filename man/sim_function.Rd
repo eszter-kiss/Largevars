@@ -19,7 +19,7 @@ sim_function(data, k = 1, r = 1, sim_num = 500)
 A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic for the original data) and a histogram.
 }
 \description{
-Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
+Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 }
 \examples{
 result <- sim_function(data,k=1,r=1,sim_num=20)
