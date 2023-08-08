@@ -15,47 +15,33 @@
 
 largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, significance_level = 0.05){
 
-#Stopping conditions
-  #check if data has been provided (because this input does not have a default)
-  myArgs <- match.call()
-  dataInArgs <- ("data" %in% names(myArgs))
-  stopifnot("`data` is a mandatory input" = dataInArgs==TRUE)
+# Stopping conditions
+  error_indicator <- check_input_largevar(data,k,r, fin_sample_corr, plot_output, significance_level)
+    if(error_indicator == 1){
+    stop()
+  }
 
-  #check correctness of input
-  stopifnot("`data` must be a numeric matrix." = is.matrix(data)&is.numeric(data))
+#parameters based on data
+     ss = dim(data)
+     tau = ss[1]
+     t = tau-1
+     N =ss[2]
 
-  #parameters extracted based on data input that we need
-  ss = dim(data)
-  tau = ss[1]
-  t = tau-1
-  N =ss[2]
-
-  #check correctness of input
-  stopifnot("`k` must be a positive integer." = k%%1==0&k>0)
-  stopifnot("`r` must be a positive integer." = r%%1==0&r>0)
-  stopifnot("`significance_level` must be a real number strictly between 0 and 1." = significance_level<1&significance_level>0)
-  stopifnot("`plot_output` must be a boolean." = plot_output==FALSE|plot_output==TRUE)
-  stopifnot("`fin_sample_corr` must be a boolean." = fin_sample_corr==FALSE|fin_sample_corr==TRUE)
-
-  #limit max number of k
-  stopifnot("`k` must be such that k+1 < T/N holds." = k<t/N-1)
-
-  #limit max number of r
-  stopifnot("`r` must be less than or equal to the number of variables in your dataset." = r<=N)
-
-  # create matrix objects to store our transformed data in
+# Matrix objects to store our transformed data in
   X_tilde=matrix(nrow=N,ncol=t)
   dX=matrix(nrow=N,ncol=t)
 
+# transform the data input
   for (i in 1:t){
-    X_tilde[,i]=data[i,]-((i-1)/t)*(data[tau,]-data[1,]); # Step 1: De-trend data, time shift
-    # and here we change from the (N,T) layout in input to (T,N) layout in our objects
-    dX[,i]=(data[i+1,]-data[i,]) #difference the data
+    X_tilde[,i]=data[i,]-((i-1)/t)*(data[tau,]-data[1,]) #de-trend, time shift
+    # changes from the (N,T) layout to (T,N) layout
+    dX[,i]=(data[i+1,]-data[i,]) #differencing
   }
 
-  # Based on whether k=1 or k>1 our code is a little different for conducting the test, hence the "if" structure
+
+# Based on whether k=1 or k>1 our code is a little different for conducting the test, hence the "if" structure
   if (k==1){
-    # Step 2: De-mean data
+# De-mean data
       R0=matrix(0, N, t)
       R1=matrix(0,N,t)
       meanvec_tilde <- apply(X_tilde, 1 , mean)
@@ -63,21 +49,21 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
       meanvec_d <- apply(dX, 1 , mean)
       R0 <- apply(dX,2,function(x) x-meanvec_d)
 
-    # Step 3 part 1: Calculate the squared sample canonical correlations between R0 and R1
+# Calculate squared sample canonical correlations between R0 and R1
       S00=R0%*%t(R0)
       S11=R1%*%t(R1)
       S01=R0%*%t(R1)
       S10=R1%*%t(R0)
 
-    # Step 3 part 2: Calculate the eigenvalues of S10 S00^-1 S01 S11^-1 matrix
+# Calculate the eigenvalues of S10 S00^-1 S01 S11^-1 matrix
       can_corr_mat <- S10%*%solve(S00)%*%S01%*%solve(S11)
-      ev_values <- eigen(can_corr_mat)$values #the function returns the eigenvalues in descending order in a vector object
+      ev_values <- eigen(can_corr_mat)$values # returns the eigenvalues in descending order in a vector object
 
-    # Step 4: form the test statistic
+# Test statistic
       loglambda <- log(rep(1,length(ev_values))-ev_values)
       NT <- sum(loglambda[c(1:r)])
 
-      #based on whether we have finite sample correction request by the user, the parameters p and q are corrected by a 2/N factor in this "if" function
+      #if we have finite sample correction request by the user, p and q are corrected by 2/N
       if (fin_sample_corr == FALSE){
         p <- 2
         q <- t/N - 1
@@ -88,6 +74,7 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
       lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
       lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
+
       c_1 <- log(1-lambda_p)
       c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
 
@@ -95,15 +82,16 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
       LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
 
       # these are calculated in addition to the above test statistic based on the user's input in order to merge them into the statistical table in the output to help the user make a decision on H0
-
+  ######### do it for r=1-10 and put it in a loop
       NT_1 <- sum(loglambda[c(1:1)])
-      LR_nt_1 <- (NT_1-1*c_1)/((N^(-2/3))*c_2) # test statistic for r=1
+      LR_nt_1 <- (NT_1-1*c_1)/((N^(-2/3))*c_2) # r=1
       NT_2 <- sum(loglambda[c(1:2)])
-      LR_nt_2 <- (NT_2-2*c_1)/((N^(-2/3))*c_2) # test statistic for r=2
+      LR_nt_2 <- (NT_2-2*c_1)/((N^(-2/3))*c_2) # r=2
       NT_3 <- sum(loglambda[c(1:3)])
-      LR_nt_3 <- (NT_3-3*c_1)/((N^(-2/3))*c_2) # test statistic for r=3
+      LR_nt_3 <- (NT_3-3*c_1)/((N^(-2/3))*c_2) # r=3
 
       # this section appends the statistical table for r=1,2,3 by the test statistics calculated for r=1,2,3
+######### do it for r=1-10
       tests <- c(LR_nt_1,LR_nt_2,LR_nt_3)
       table <- cbind(sum_airy_quantiles[,1:4], tests)
       colnames(table)[dim(table)[2]] <- "Test statistic"
@@ -260,7 +248,7 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
     # Plot the function
     if (plot_output==TRUE){
       my_function <- function(x){(p+q)*sqrt(pmax(0,(lambda_p-x)*(x-lambda_m)))/x/(1-x)/2/pi}
-      plot <- hist(ev_values, breaks = 2.5*(log2(length(ev_values))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Frequency" ,xlim=c(0,1))
+      plot <- hist(ev_values, breaks = 3*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Frequency" ,xlim=c(0,1))
       curve(my_function,add = TRUE)
 
       # this will guarantee that if plot_output=TRUE by user then the histogram plot will automatically pop up in "Plots" after running function
@@ -484,7 +472,7 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
     # Plot the function if user asked for it
     if (plot_output==TRUE){
       my_function <- function(x){(p+q)*sqrt(pmax(0,(lambda_p-x)*(x-lambda_m)))/x/(1-x)/2/pi}
-      plot <- hist(ev_values, breaks = 2.5*(log2(length(ev_values))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Frequency" ,xlim=c(0,1))
+      plot <- hist(ev_values, breaks = 3*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Frequency" ,xlim=c(0,1))
       curve(my_function,add = TRUE)
       #this guarantees that the histogram will pop up on its own in "Plots" after running the test
       list <- append(list,plot)
@@ -492,206 +480,5 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
     #the output of the function
     return(list)
-  }
-}
-
-#' Cointegration test for settings of large N and T
-#'
-#' Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
-#' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
-#' @param k The number of lags we wish to employ in the VECM form (default: k=1)
-#' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
-#' @param sim_num The number of simulations that the function conducts for H_0 (the function is slow!). Default is 500.
-#' @examples
-#' result <- sim_function(data,k=1,r=1,sim_num=20)
-#' @return A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic for the original data) and a histogram.
-#' @export
-#'
-
-sim_function <- function(data,k=1,r=1,sim_num=500){
-
-# Stopping conditions
-  #check if data has been provided
-  myArgs <- match.call()
-  dataInArgs <- ("data" %in% names(myArgs))
-  stopifnot("`data` is a mandatory input" = dataInArgs==TRUE)
-
-  #check correctness of input
-  stopifnot("`data` must be a numeric matrix." = is.matrix(data)&is.numeric(data))
-
-  # extract parameters based on data input
-  ss = dim(data)
-  tau = ss[1]
-  t = tau-1
-  N =ss[2]
-
-  #check correctness of input
-  stopifnot("`k` must be a positive integer." = k%%1==0&k>0)
-  stopifnot("`r` must be a positive integer." = r%%1==0&r>0)
-
-  #limit max number of k
-  stopifnot("`k` must be such that k+1 < T/N holds." = k<t/N-1)
-
-  #limit max number of r
-  stopifnot("`r` must be less than or equal to the number of variables in your dataset." = r<=N)
-
-  #check if sim_num is a positive integer
-  stopifnot("`sim_num` must be a positive integer." = sim_num%%1==0&sim_num>0)
-
-  #simulation loop
-  stat_vec <- matrix(0,sim_num,1)
-  for (j in 1:sim_num){
-    X_tilde <- matrix(0, N, tau)
-    dX <- matrix(rnorm(N * tau), N, tau)
-    # ts.plot(dX[5,])
-
-    for (i in 2:tau){
-      if (i == 2){
-        X_tilde[,2] <- dX[,1]-1/tau* rowSums(dX[,]) #rowSums does not work when we only have one column so separate case
-      }
-      if (i>2){
-        X_tilde[, i] <- rowSums(dX[, 1:(i - 1)]) - ((i - 1)/tau) * rowSums(dX[,])  # detrend the data and do time shift
-      }
-    }
-    #ts.plot(X_tilde[87,])
-
-    data_sim <- t(X_tilde) #change to N,T layout because that is the format that largevar() asks for: input is going to be X_tilde
-
-    output <- Largevars:::largevar_scel(data_sim,k,r)
-    stat_vec[j,1]<-output
-
-    #progress report on simulation
-    if(j%%10==0){
-      base::print(paste("Simulation loop is at",j))
-    }
-  }
-
-  x <- Largevars:::largevar_scel(data,k,r)
-
-  values <- stat_vec[,1]
-  percentage <- (length(values[values > x]))/sim_num
-
-  plot <- hist(values,breaks=2.5*(log2(sim_num)+1))
-  abline(v=x,col="red",lwd=3)
-
-  list <- list("sim_results"=stat_vec,"empirical_percentage"=percentage,plot)
-  return(list)
-}
-
-
-#' Cointegration test for settings of large N and T
-#'
-#' This is the "skeleton" version of the largevar function in the package. It is called within the sim_function function to make runtime faster. For the actual cointegration test, use the largevar function.
-#' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
-#' @param k The number of lags we wish to employ in the VECM form (default: k=1)
-#' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
-#' @return The test statistic.
-#' @export
-#'
-
-largevar_scel <- function(data,k=1,r=1){
-
-  #parameters extracted based on data input that we need
-  ss = dim(data)
-  tau = ss[1]
-  t = tau-1
-  N =ss[2]
-
-  # create matrix objects to store our transformed data in
-  X_tilde=matrix(nrow=N,ncol=t)
-  dX=matrix(nrow=N,ncol=t)
-
-  for (i in 1:t){
-    X_tilde[,i]=data[i,]-((i-1)/t)*(data[tau,]-data[1,]); # Step 1: De-trend data, time shift
-    # and here we change from the (N,T) layout in input to (T,N) layout in our objects
-    dX[,i]=(data[i+1,]-data[i,]) #difference the data
-  }
-
-  # Based on whether k=1 or k>1 our code is a little different for conducting the test, hence the "if" structure
-  if (k==1){
-    # Step 2: De-mean data
-    R0=matrix(0, N, t)
-    R1=matrix(0,N,t)
-    meanvec_tilde <- apply(X_tilde, 1 , mean)
-    R1 <- apply(X_tilde, 2, function(x) x-meanvec_tilde)
-    meanvec_d <- apply(dX, 1 , mean)
-    R0 <- apply(dX,2,function(x) x-meanvec_d)
-
-    # Step 3 part 1: Calculate the squared sample canonical correlations between R0 and R1
-    S00=R0%*%t(R0)
-    S11=R1%*%t(R1)
-    S01=R0%*%t(R1)
-    S10=R1%*%t(R0)
-
-    # Step 3 part 2: Calculate the eigenvalues of S10 S00^-1 S01 S11^-1 matrix
-    can_corr_mat <- S10%*%solve(S00)%*%S01%*%solve(S11)
-    ev_values <- eigen(can_corr_mat)$values #the function returns the eigenvalues in descending order in a vector object
-
-    # Step 4: form the test statistic
-    loglambda <- log(rep(1,length(ev_values))-ev_values)
-    NT <- sum(loglambda[c(1:r)])
-
-    p <- 2
-    q <- t/N - 1
-    lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
-    lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
-    c_1 <- log(1-lambda_p)
-    c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
-
-    # test statistic
-    LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
-
-    return(LR_nt)
-  } else { #if k not 1
-
-    #Create cyclic lag matrix
-    m <- matrix(1,nrow=t-1,t-1)
-    m <- m - lower.tri(m,diag=FALSE)-upper.tri(m,diag = FALSE)
-    m <- rbind(rep(0,t-1),m)
-    m <- cbind(m,rep(0,t))
-    m[1,t] <- 1
-
-    #Create variable matrices for regressions
-    Z1=matrix(1,nrow=N*(k-1)+1,ncol=t)
-    Zk <- X_tilde
-
-    # Creating X_{t-k} based on VECM form
-    for (i in 1:(k-1)){
-      Zk <- Zk%*%t(m)
-    }
-
-    # Creating the lags with the cyclic lag operator
-    cyclic_lag <- dX
-    for (j in 1:(k-1)){
-      cyclic_lag <- cyclic_lag%*%t(m)
-      Z1[(1+N*(j-1)):(N*j),]<-cyclic_lag
-    }
-
-    # stacked regressions
-    M11=Z1%*%t(Z1)/t;
-    R0=dX-(dX%*%t(Z1)/t)%*%solve(M11)%*%Z1
-    Rk=Zk-(Zk%*%t(Z1)/t)%*%solve(M11)%*%Z1
-    S00=R0%*%t(R0)
-    Skk=Rk%*%t(Rk)
-    S0k=R0%*%t(Rk)
-    Sk0=Rk%*%t(R0)
-    #eigenvalues
-    ev_values=eigen(solve(Skk)%*%Sk0%*%solve(S00)%*%S0k)$values
-
-    #test
-    loglambda <- log(rep(1,length(ev_values))-ev_values)
-    NT <- sum(loglambda[c(1:r)])
-
-    p <- 2
-    q <- t/N - k
-    lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
-    lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
-    c_1 <- log(1-lambda_p)
-    c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
-
-    #test statistic
-    LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
-
-    return(LR_nt)
   }
 }
