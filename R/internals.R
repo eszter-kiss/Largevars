@@ -44,22 +44,8 @@ largevar_scel <- function(data,k=1,r=1){
     # Step 3 part 2: Calculate the eigenvalues of S10 S00^-1 S01 S11^-1 matrix
     can_corr_mat <- S10%*%solve(S00)%*%S01%*%solve(S11)
     ev_values <- eigen(can_corr_mat)$values #the function returns the eigenvalues in descending order in a vector object
+    ev_values <- sort(ev_values, decreasing = TRUE)  # eigenvalues in descending order
 
-    # Step 4: form the test statistic
-    loglambda <- log(rep(1,length(ev_values))-ev_values)
-    NT <- sum(loglambda[c(1:r)])
-
-    p <- 2
-    q <- t/N - 1
-    lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
-    lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
-    c_1 <- log(1-lambda_p)
-    c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
-
-    # test statistic
-    LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
-
-    return(LR_nt)
   } else { #if k not 1
 
     #Create cyclic lag matrix
@@ -93,8 +79,28 @@ largevar_scel <- function(data,k=1,r=1){
     Skk=Rk%*%t(Rk)
     S0k=R0%*%t(Rk)
     Sk0=Rk%*%t(R0)
+
     #eigenvalues
     ev_values=eigen(solve(Skk)%*%Sk0%*%solve(S00)%*%S0k)$values
+    ev_values <- sort(ev_values, decreasing = TRUE)  # eigenvalues in descending order
+  }
+
+    # Step 4: form the test statistic
+    loglambda <- log(rep(1,length(ev_values))-ev_values)
+    NT <- sum(loglambda[c(1:r)])
+
+    p <- 2
+    q <- t/N - 1
+    lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
+    lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
+    c_1 <- log(1-lambda_p)
+    c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
+
+    # test statistic
+    LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
+
+    return(LR_nt)
+  ######
 
     #test
     loglambda <- log(rep(1,length(ev_values))-ev_values)
@@ -111,7 +117,6 @@ largevar_scel <- function(data,k=1,r=1){
     LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
 
     return(LR_nt)
-  }
 }
 
 #' Define a class for the largervar() output list

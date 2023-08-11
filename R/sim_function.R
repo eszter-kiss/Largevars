@@ -11,16 +11,13 @@
 #' @export
 #'
 
-sim_function <- function(data,k=1,r=1,sim_num=500){
+sim_function <- function(data=NULL,k=1,r=1,sim_num=1000){
 
   # Stopping conditions
-  #check if data has been provided
-  myArgs <- match.call()
-  dataInArgs <- ("data" %in% names(myArgs))
-  stopifnot("`data` is a mandatory input" = dataInArgs==TRUE)
-
-  #check correctness of input
-  stopifnot("`data` must be a numeric matrix." = is.matrix(data)&is.numeric(data))
+  error_indicator <- check_input_simfun(data,k,r, sim_num)
+  if(error_indicator == 1){
+    stop()
+  }
 
   # extract parameters based on data input
   ss = dim(data)
@@ -28,25 +25,11 @@ sim_function <- function(data,k=1,r=1,sim_num=500){
   t = tau-1
   N =ss[2]
 
-  #check correctness of input
-  stopifnot("`k` must be a positive integer." = k%%1==0&k>0)
-  stopifnot("`r` must be a positive integer." = r%%1==0&r>0)
-
-  #limit max number of k
-  stopifnot("`k` must be such that k+1 < T/N holds." = k<t/N-1)
-
-  #limit max number of r
-  stopifnot("`r` must be less than or equal to the number of variables in your dataset." = r<=N)
-
-  #check if sim_num is a positive integer
-  stopifnot("`sim_num` must be a positive integer." = sim_num%%1==0&sim_num>0)
-
   #simulation loop
   stat_vec <- matrix(0,sim_num,1)
   for (j in 1:sim_num){
     X_tilde <- matrix(0, N, tau)
     dX <- matrix(rnorm(N * tau), N, tau)
-    # ts.plot(dX[5,])
 
     for (i in 2:tau){
       if (i == 2){
@@ -56,7 +39,6 @@ sim_function <- function(data,k=1,r=1,sim_num=500){
         X_tilde[, i] <- rowSums(dX[, 1:(i - 1)]) - ((i - 1)/tau) * rowSums(dX[,])  # detrend the data and do time shift
       }
     }
-    #ts.plot(X_tilde[87,])
 
     data_sim <- t(X_tilde) #change to N,T layout because that is the format that largevar() asks for: input is going to be X_tilde
 
@@ -64,7 +46,7 @@ sim_function <- function(data,k=1,r=1,sim_num=500){
     stat_vec[j,1]<-output
 
     #progress report on simulation
-    if(j%%10==0){
+    if(j%%100==0){
       base::print(paste("Simulation loop is at",j))
     }
   }
@@ -74,9 +56,9 @@ sim_function <- function(data,k=1,r=1,sim_num=500){
   values <- stat_vec[,1]
   percentage <- (length(values[values > x]))/sim_num
 
-  plot <- hist(values,breaks=3*(ceiling(log2(length(ev_values)))+1))
+  plot <- hist(values,breaks=3*(ceiling(log2(length(values)))+1))
   abline(v=x,col="red",lwd=3)
 
   list <- list("sim_results"=stat_vec,"empirical_percentage"=percentage,plot)
-  return(list)
+  new("simfun_output", list)
 }
