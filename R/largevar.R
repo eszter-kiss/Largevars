@@ -52,15 +52,9 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
     # Calculate squared sample canonical correlations between R0 and R1
       S00=R0%*%t(R0)
-      S11=R1%*%t(R1)
-      S01=R0%*%t(R1)
-      S10=R1%*%t(R0)
-
-    # Calculate the eigenvalues of S10 S00^-1 S01 S11^-1 matrix
-      can_corr_mat <- S10%*%solve(S00)%*%S01%*%solve(S11)
-
-      ev_values <- eigen(can_corr_mat)$values
-      ev_values <- sort(ev_values, decreasing = TRUE)  # eigenvalues in descending order
+      Skk=R1%*%t(R1)
+      S0k=R0%*%t(R1)
+      Sk0=R1%*%t(R0)
 
   } else { # k>1
     # Create cyclic lag matrix
@@ -94,11 +88,11 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
       Skk=Rk%*%t(Rk)
       S0k=R0%*%t(Rk)
       Sk0=Rk%*%t(R0)
-
-    # eigenvalues
-      ev_values=eigen(solve(Skk)%*%Sk0%*%solve(S00)%*%S0k)$values
-      ev_values <- sort(ev_values, decreasing = TRUE)  # eigenvalues in descending order
   }
+
+      can_corr_mat <- solve(Skk)%*%Sk0%*%solve(S00)%*%S0k
+      ev_values <- eigen(can_corr_mat)$values
+      ev_values <- sort(ev_values, decreasing = TRUE)
 
  # Test statistic
       loglambda <- log(rep(1,length(ev_values))-ev_values)
@@ -106,10 +100,10 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
       if (fin_sample_corr == FALSE){
         p <- 2
-        q <- t/N - 1
+        q <- t/N - k
       } else{ # if we have finite sample correction request by the user
         p <- 2-2/N
-        q <- t/N - 1 - 2/N
+        q <- t/N - k - 2/N
       }
 
       lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)

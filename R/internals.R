@@ -4,10 +4,11 @@
 #' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
 #' @param k The number of lags we wish to employ in the VECM form (default: k=1)
 #' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
+#' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false.
 #' @return The test statistic.
 #' @keywords internal
 
-largevar_scel <- function(data,k=1,r=1){
+largevar_scel <- function(data,k,r,fin_sample_corr){
 
   #parameters extracted based on data input that we need
   ss = dim(data)
@@ -35,27 +36,22 @@ largevar_scel <- function(data,k=1,r=1){
     meanvec_d <- apply(dX, 1 , mean)
     R0 <- apply(dX,2,function(x) x-meanvec_d)
 
-    # Step 3 part 1: Calculate the squared sample canonical correlations between R0 and R1
+
+    # Calculate squared sample canonical correlations between R0 and R1
     S00=R0%*%t(R0)
-    S11=R1%*%t(R1)
-    S01=R0%*%t(R1)
-    S10=R1%*%t(R0)
+    Skk=R1%*%t(R1)
+    S0k=R0%*%t(R1)
+    Sk0=R1%*%t(R0)
 
-    # Step 3 part 2: Calculate the eigenvalues of S10 S00^-1 S01 S11^-1 matrix
-    can_corr_mat <- S10%*%solve(S00)%*%S01%*%solve(S11)
-    ev_values <- eigen(can_corr_mat)$values #the function returns the eigenvalues in descending order in a vector object
-    ev_values <- sort(ev_values, decreasing = TRUE)  # eigenvalues in descending order
-
-  } else { #if k not 1
-
-    #Create cyclic lag matrix
+  } else { # k>1
+    # Create cyclic lag matrix
     m <- matrix(1,nrow=t-1,t-1)
     m <- m - lower.tri(m,diag=FALSE)-upper.tri(m,diag = FALSE)
     m <- rbind(rep(0,t-1),m)
     m <- cbind(m,rep(0,t))
     m[1,t] <- 1
 
-    #Create variable matrices for regressions
+    # Create variable matrices for regressions
     Z1=matrix(1,nrow=N*(k-1)+1,ncol=t)
     Zk <- X_tilde
 
@@ -79,62 +75,31 @@ largevar_scel <- function(data,k=1,r=1){
     Skk=Rk%*%t(Rk)
     S0k=R0%*%t(Rk)
     Sk0=Rk%*%t(R0)
-
-    #eigenvalues
-    ev_values=eigen(solve(Skk)%*%Sk0%*%solve(S00)%*%S0k)$values
-    ev_values <- sort(ev_values, decreasing = TRUE)  # eigenvalues in descending order
   }
 
-    # Step 4: form the test statistic
-    loglambda <- log(rep(1,length(ev_values))-ev_values)
-    NT <- sum(loglambda[c(1:r)])
+  can_corr_mat <- solve(Skk)%*%Sk0%*%solve(S00)%*%S0k
+  ev_values <- eigen(can_corr_mat)$values
+  ev_values <- sort(ev_values, decreasing = TRUE)
 
-    p <- 2
-    q <- t/N - 1
-    lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
-    lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
-    c_1 <- log(1-lambda_p)
-    c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
+  # Step 4: form the test statistic
+  loglambda <- log(rep(1,length(ev_values))-ev_values)
+  NT <- sum(loglambda[c(1:r)])
 
-    # test statistic
-    LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
+  if (fin_sample_corr == FALSE){
+     p <- 2
+     q <- t/N - k
+  } else{ # if we have finite sample correction request by the user
+     p <- 2-2/N
+     q <- t/N - k - 2/N
+  }
 
-    return(LR_nt)
-  ######
+  lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
+  lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
+  c_1 <- log(1-lambda_p)
+  c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
 
-    #test
-    loglambda <- log(rep(1,length(ev_values))-ev_values)
-    NT <- sum(loglambda[c(1:r)])
+  # test statistic
+  LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
 
-    p <- 2
-    q <- t/N - k
-    lambda_m <- 1/((p+q)^2)*((sqrt(p*(p+q-1))-sqrt(q))^2)
-    lambda_p <- 1/((p+q)^2)*((sqrt(p*(p+q-1))+sqrt(q))^2)
-    c_1 <- log(1-lambda_p)
-    c_2 <- -((2^(2/3)*lambda_p^(2/3))/(((1-lambda_p)^(1/3))*((lambda_p-lambda_m)^(1/3))))*((p+q)^(-2/3))
-
-    #test statistic
-    LR_nt <- (NT-r*c_1)/((N^(-2/3))*c_2)
-
-    return(LR_nt)
+  return(LR_nt)
 }
-
-#' Define a class for the largervar() output list
-#' # Define the class
-
-setClass("stat_test", representation("list"))
-
-# Define the custom show method
-setMethod("show", "stat_test", function(object) {
-  cat("Output for the largevars function", "\n")
-  cat("===================================", "\n")
-  cat("Table of statistics\n")
-  cat("\n")  # Print double dashed line
-  print(object$significance_test$significance_table)
-  cat("\n")
-  cat(object$significance_test$`Statistical decision`,"\n")
-  cat("============================================================================", "\n")
-  cat("Test statistic:", object$statistic ,"\n")
-  cat(object$significance_test$text,"\n")
-  cat("Decision about the H0: ", object$significance_test$boolean_decision,"\n")
-})

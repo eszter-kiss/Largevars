@@ -4,7 +4,13 @@
 \alias{sim_function}
 \title{Cointegration test for settings of large N and T}
 \usage{
-sim_function(data, k = 1, r = 1, sim_num = 500)
+sim_function(
+  data = NULL,
+  k = 1,
+  r = 1,
+  fin_sample_corr = FALSE,
+  sim_num = 1000
+)
 }
 \arguments{
 \item{data}{a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships}
@@ -13,7 +19,9 @@ sim_function(data, k = 1, r = 1, sim_num = 500)
 
 \item{r}{The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)}
 
-\item{sim_num}{The number of simulations that the function conducts for H_0 (the function is slow!). Default is 500.}
+\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false.}
+
+\item{sim_num}{The number of simulations that the function conducts for H_0 (the function is slow!). Default is 1000.}
 }
 \value{
 A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic for the original data) and a histogram.
@@ -22,5 +30,5 @@ A list that contains the simulation values, the empirical percentage (realizatio
 Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 }
 \examples{
-result <- sim_function(data,k=1,r=1,sim_num=20)
+result <- sim_function(data,k=1,r=1,sim_num=2000)
 }

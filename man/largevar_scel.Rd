@@ -4,7 +4,7 @@
 \alias{largevar_scel}
 \title{Cointegration test for settings of large N and T}
 \usage{
-largevar_scel(data, k = 1, r = 1)
+largevar_scel(data, k, r, fin_sample_corr)
 }
 \arguments{
 \item{data}{a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships}
@@ -12,6 +12,8 @@ largevar_scel(data, k = 1, r = 1)
 \item{k}{The number of lags we wish to employ in the VECM form (default: k=1)}
 
 \item{r}{The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)}
+
+\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false.}
 }
 \value{
 The test statistic.

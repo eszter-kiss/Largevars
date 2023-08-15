@@ -44,6 +44,10 @@ check_input_simfun <- function(data,k,r,sim_num){
     print("`sim_num` must be a positive integer.")
     return(1)
 
+  }else if  ( (isTRUE(fin_sample_corr)==FALSE) & (isFALSE(fin_sample_corr)==FALSE) ){
+    print("`fin_sample_corr` must be a boolean.")
+    return(1)
+
   } else if (sim_num>500){
     print("Warning: simulation may run for several minutes")
     return(0)
