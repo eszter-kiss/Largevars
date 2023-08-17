@@ -24,7 +24,7 @@ check_input_largevar <- function(data,k,r, fin_sample_corr, plot_output, signifi
   }else if(((k%%1==0)==FALSE)|((k>0)==FALSE)){
     print("`k` must be a positive integer.")
     return(1) # arg. 4
-  }else if  ( k >= ((dim(data)[1]-1)/(dim(data)[2]-1)) ){
+  }else if  (k >= ((dim(data)[1]-1)/dim(data)[2])-1){
     print("`k` must be such that k+1 < T/N holds.")
     return(1) # arg. 5
 

@@ -7,8 +7,7 @@
 #' @param sim_num The number of simulation we wish to run.
 #' @keywords internal
 
-check_input_simfun <- function(data,k,r,sim_num){
-
+check_input_simfun <- function(data,k,r,fin_sample_corr,sim_num){
   if(is.null(data)){ # data must be existing input (default is NULL if nothing is input)
     print("`data` is a mandatory input")
     return(1)
@@ -22,7 +21,7 @@ check_input_simfun <- function(data,k,r,sim_num){
   }else if(((k%%1==0)==FALSE)|((k>0)==FALSE)){
     print("`k` must be a positive integer.")
     return(1)
-  }else if  ( k >= ((dim(data)[1]-1)/(dim(data)[2]-1)) ){
+  }else if  ( k >= ((dim(data)[1]-1)/dim(data)[2])-1){
     print("`k` must be such that k+1 < T/N holds.")
     return(1)
 

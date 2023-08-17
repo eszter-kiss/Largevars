@@ -14,20 +14,20 @@ largevar(
 )
 }
 \arguments{
-\item{data}{a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships}
+\item{data}{A numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships.}
 
-\item{k}{The number of lags we wish to employ in the VECM form (default: k=1)}
+\item{r}{The number of cointegrating relationships we impose on the H1 hypothesis. The default value is r=1.}
 
-\item{r}{The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)}
+\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. The default value is FALSE.}
 
-\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false}
+\item{plot_output}{A boolean variable indicating whether we wish to generate a plot of the distribution of the eigenvalues. The default value is TRUE.}
 
-\item{plot_output}{A boolean variable indicating whether we wish to generate the distribution of the eigenvalues (default: TRUE)}
+\item{significance_level}{Specify the significance level at which the decision about the H0 should be made. The default value is 0.05.}
 
-\item{significance_level}{Specify the significance level at which the decision about the H0 should be made. For r=1 this can be any level of significance. For r=2 and r=3, the significance level input will be rounded up to the nearest of the following: 0.1, 0.05, 0.025, 0.01. If the significance level is larger than 0.1, the decision will be made at the 10% level. For r>3 only the test statistic is returned. For an empirical p-value for r>3 use the sim_function fun. in the package.}
+\item{kThe}{number of lags we wish to employ in the VECM form. The default value is k=1.}
 }
 \value{
-A list that contains the test statistic, the upper and lower bounds of the support of the measure of the Wachter distribution, the eigenvalues of our sample matrix, and a table of significance for the test statistic.
+A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about the H0 at the significance level specified by the user.
 }
 \description{
 Runs the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150

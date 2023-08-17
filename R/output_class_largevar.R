@@ -5,9 +5,9 @@ setClass("stat_test", representation("list"))
 setMethod("show", "stat_test", function(object) {
   cat("Output for the largevars function", "\n")
   cat("===================================", "\n")
-  cat("Table of statistics\n")
+  cat("Row of statistics\n")
   cat("\n")  # Print double dashed line
-  print(object$significance_test$significance_table)
+  print(object$significance_test$significance_row)
   cat("\n")
   cat(object$significance_test$`Statistical decision`,"\n")
   cat("============================================================================", "\n")

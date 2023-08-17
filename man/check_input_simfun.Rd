@@ -4,7 +4,7 @@
 \alias{check_input_simfun}
 \title{Cointegration test for settings of large N and T}
 \usage{
-check_input_simfun(data, k, r, sim_num)
+check_input_simfun(data, k, r, fin_sample_corr, sim_num)
 }
 \arguments{
 \item{data}{a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships}

@@ -1,15 +1,15 @@
 #' Cointegration test for settings of large N and T
 #'
 #' Runs the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
-#' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
-#' @param k The number of lags we wish to employ in the VECM form (default: k=1)
-#' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
-#' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false
-#' @param plot_output A boolean variable indicating whether we wish to generate the distribution of the eigenvalues (default: TRUE)
-#' @param significance_level Specify the significance level at which the decision about the H0 should be made. For r=1 this can be any level of significance. For r=2 and r=3, the significance level input will be rounded up to the nearest of the following: 0.1, 0.05, 0.025, 0.01. If the significance level is larger than 0.1, the decision will be made at the 10% level. For r>3 only the test statistic is returned. For an empirical p-value for r>3 use the sim_function fun. in the package.
+#' @param data A numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships.
+#' @param kThe number of lags we wish to employ in the VECM form. The default value is k=1.
+#' @param r The number of cointegrating relationships we impose on the H1 hypothesis. The default value is r=1.
+#' @param fin_sample_corr  A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. The default value is FALSE.
+#' @param plot_output A boolean variable indicating whether we wish to generate a plot of the distribution of the eigenvalues. The default value is TRUE.
+#' @param significance_level Specify the significance level at which the decision about the H0 should be made. The default value is 0.05.
 #' @examples
 #' result <- largevar(data=data,k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05);
-#' @return A list that contains the test statistic, the upper and lower bounds of the support of the measure of the Wachter distribution, the eigenvalues of our sample matrix, and a table of significance for the test statistic.
+#' @return A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about the H0 at the significance level specified by the user.
 #' @export
 #'
 
@@ -124,7 +124,7 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
  # Output table (r=1-10 H0 at 0.9, 0.95, 0.97, 0.99 percentiles)
       table <- cbind(t(percentiles[90,2:11]),t(percentiles[95,2:11]),t(percentiles[97,2:11]),t(percentiles[99,2:11]),statistics)
-      colnames(table) <- c("0.90", "0.95","0.97","0.99","Test statistic")
+      colnames(table) <- c("0.90", "0.95","0.97","0.99","Test stat.")
       rownames(table) <- c("r=1",  "r=2",  "r=3",  "r=4" , "r=5",  "r=6" , "r=7" , "r=8" , "r=9" , "r=10")
 
 #guide for how to make the decision on H0
@@ -134,6 +134,9 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
       list_table <- list("significance_table"=table,"Statistical decision"=decision)
 
     if (r<=10){
+          #  statistical table output: as default give only the row corresponding to r
+          significance_table_row <- table[r,]
+
           # we match DOWN our test statistic because we have right sided test statistic and we don't want to increase type 1 error rate
           lessthan_matrix <- as.matrix(which(percentiles[,1+r] <= LR_nt))
 
@@ -165,13 +168,18 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
                   if (significance_level < 0.01){ #we don't know what the decision would be because we don't know the correct p-value
                     decision_3 <- NA
                   } else{
-                    decision_3 <- 0
+                    decision_3 <- 1
                   }
           }
 
-          list_2 <- list("p_value"=p_value, "text"=decision_2, "boolean_decision" = decision_3) #intermediary list to append our final, output list with
+          list_2 <- list("significance_row"=significance_table_row,"p_value"=p_value, "text"=decision_2, "boolean_decision" = decision_3) #intermediary list to append our final, output list with
           list_table <- append(list_table,list_2)
     }
+
+    significance_table_row <- " "
+    list_2 <- list("significance_row"=significance_table_row)
+    list_table <- append(list_table,list_2)
+
 
  list <- list("statistic"=LR_nt, "measure_upper_bound"=lambda_p, "measure_lower_bound"=lambda_m, "eigenvalues"=ev_values,"significance_test"=list_table,"k"=k,"r"=r)
 

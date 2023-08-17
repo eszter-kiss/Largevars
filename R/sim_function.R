@@ -22,6 +22,11 @@ sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=100
 
   print("This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations.")
 
+  ### this is for progress bar
+  options(width = 80)
+  n <- sim_num
+  ############################
+
   # extract parameters based on data input
   ss = dim(data)
   tau = ss[1]
@@ -48,11 +53,20 @@ sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=100
     output <- largevar_scel(data_sim,k,r,fin_sample_corr)
     stat_vec[j,1]<-output
 
-    #progress report on simulation
-    if(j%%100==0){
-      base::print(paste("Simulation loop is at",j))
-    }
-  }
+    # #progress report on simulation
+    # if(j%%100==0){
+    #   base::print(paste("Simulation loop is at",j))
+    # }
+
+    ii <- j
+    extra <- nchar('||100%')
+    width <- options()$width
+    step <- round(ii / n * (width - extra))
+    text <- sprintf('|%s%s|% 3s%%', strrep('=', step),
+                       strrep(' ', width - step - extra), round(ii / n * 100))
+    cat(text, " \r")
+    flush.console()
+   }
 
   x <- largevar_scel(data,k,r,fin_sample_corr)
 
