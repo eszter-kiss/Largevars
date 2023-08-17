@@ -41,10 +41,10 @@ sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=100
 
     for (i in 2:tau){
       if (i == 2){
-        X_tilde[,2] <- dX[,1]-1/tau* rowSums(dX[,]) #rowSums does not work when we only have one column so separate case
+        X_tilde[,2] <- dX[,1]
       }
       if (i>2){
-        X_tilde[, i] <- rowSums(dX[, 1:(i - 1)]) - ((i - 1)/tau) * rowSums(dX[,])  # detrend the data and do time shift
+        X_tilde[, i] <- rowSums(dX[, 1:(i - 1)])
       }
     }
 
