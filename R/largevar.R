@@ -123,9 +123,10 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
       }
 
  # Output table (r=1-10 H0 at 0.9, 0.95, 0.97, 0.99 percentiles)
-      table <- cbind(t(percentiles[90,2:11]),t(percentiles[95,2:11]),t(percentiles[97,2:11]),t(percentiles[99,2:11]),statistics)
-      colnames(table) <- c("0.90", "0.95","0.97","0.99","Test stat.")
+      table <- cbind(t(percentiles[90,2:11]),t(percentiles[95,2:11]),t(percentiles[99,2:11]),statistics)
+      colnames(table) <- c("0.90", "0.95","0.99","Test stat.")
       rownames(table) <- c("r=1",  "r=2",  "r=3",  "r=4" , "r=5",  "r=6" , "r=7" , "r=8" , "r=9" , "r=10")
+
 
 #guide for how to make the decision on H0
       decision <- paste('If the test statistic is larger than the quantile, reject H0 at the chosen level.')
@@ -175,17 +176,17 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
           list_2 <- list("significance_row"=significance_table_row,"p_value"=p_value, "text"=decision_2, "boolean_decision" = decision_3) #intermediary list to append our final, output list with
           list_table <- append(list_table,list_2)
     }
-
+    # if r>=10 then we don't have quantiles, so below applies
     significance_table_row <- " "
     list_2 <- list("significance_row"=significance_table_row)
     list_table <- append(list_table,list_2)
 
 
- list <- list("statistic"=LR_nt, "measure_upper_bound"=lambda_p, "measure_lower_bound"=lambda_m, "eigenvalues"=ev_values,"significance_test"=list_table,"k"=k,"r"=r)
+ list <- list("statistic"=LR_nt, "measure_upper_bound"=lambda_p, "measure_lower_bound"=lambda_m, "eigenvalues"=ev_values,"significance_test"=list_table,"k"=k,"r"=r,"N"=N,"t"=t)
 
     if (plot_output==TRUE){ # Plot the function
       my_function <- function(x){(p+q)*sqrt(pmax(0,(lambda_p-x)*(x-lambda_m)))/x/(1-x)/2/pi}
-      plot <- hist(ev_values, breaks = 3*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Frequency" ,xlim=c(0,1))
+      plot <- hist(ev_values, breaks = 2*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Probability" ,xlim=c(0,1))
       curve(my_function,add = TRUE)
 
       list <- append(list,plot)

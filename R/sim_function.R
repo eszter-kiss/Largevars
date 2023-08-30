@@ -73,7 +73,7 @@ sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=100
   values <- stat_vec[,1]
   percentage <- (length(values[values > x]))/sim_num
 
-  plot <- hist(values,breaks=3*(ceiling(log2(length(values)))+1))
+  plot <- hist(values,breaks=2*(ceiling(log2(length(values)))+1))
   abline(v=x,col="red",lwd=3)
 
   list <- list("sim_results"=stat_vec,"empirical_percentage"=percentage,plot)
