@@ -124,7 +124,8 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
  # Output table (r=1-10 H0 at 0.9, 0.95, 0.97, 0.99 percentiles)
       table <- cbind(t(percentiles[90,2:11]),t(percentiles[95,2:11]),t(percentiles[99,2:11]),statistics)
-      colnames(table) <- c("0.90", "0.95","0.99","Test stat.")
+      colnames(table) <- c("10% Critical value", "5% Critical value", "1% Critical value", "Test stat.")
+
       rownames(table) <- c("r=1",  "r=2",  "r=3",  "r=4" , "r=5",  "r=6" , "r=7" , "r=8" , "r=9" , "r=10")
 
 
@@ -136,8 +137,10 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
     if (r<=10){
           #  statistical table output: as default give only the row corresponding to r
-          significance_table_row <- table[r,]
-
+          #significance_table_row <- table[r,]
+      significance_table_row <- cbind(t(table[r,1:3]),table[r,4])
+      colnames(significance_table_row) <- c("10% Critical value", "5% Critical value", "1% Critical value", "Test stat.")
+      rownames(significance_table_row) <- ""
           # we match DOWN our test statistic because we have right sided test statistic and we don't want to increase type 1 error rate
           lessthan_matrix <- as.matrix(which(percentiles[,1+r] <= LR_nt))
 
