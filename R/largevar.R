@@ -189,7 +189,7 @@ largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, si
 
     if (plot_output==TRUE){ # Plot the function
       my_function <- function(x){(p+q)*sqrt(pmax(0,(lambda_p-x)*(x-lambda_m)))/x/(1-x)/2/pi}
-      plot <- hist(ev_values, breaks = 2*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "Probability" ,xlim=c(0,1))
+      plot <- hist(ev_values, breaks = 2*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "" ,xlim=c(0,1))
       curve(my_function,add = TRUE)
 
       list <- append(list,plot)

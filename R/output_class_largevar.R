@@ -7,11 +7,15 @@ setMethod("show", "stat_test", function(object) {
   cat("===================================", "\n")
   cat("Cointegration test for high-dimensional VAR(k)                 ","T=", object$t,", N=", object$N,"\n")
   cat("\n")  # Print double dashed line
+  if (object$r<=10){
   print(round(object$significance_test$significance_table[object$r,],digits=2))
   cat("\n")
   cat(object$significance_test$`Statistical decision`,"\n")
   cat("============================================================================", "\n")
+  }
   cat("Test statistic:", object$statistic ,"\n")
   cat(object$significance_test$text,"\n")
+  if (object$r<=10){
   cat("Decision about the H0: ", object$significance_test$boolean_decision,"\n")
+  }
 })
