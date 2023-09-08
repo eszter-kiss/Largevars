@@ -1,9 +1,9 @@
 #' Cointegration test for settings of large N and T
 #'
 #' Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
-#' @param N a number representing the number of time series we want to simulate in the system
-#' @param tau a number representing the length of the time series we want to simulate in the system
-#' @param stat_value the test statistic value we want to calculate p-value based on
+#' @param N  The number of time series we want to simulate in the system.
+#' @param tau  The length of the time series we want to simulate in the system.
+#' @param stat_value The test statistic value we want to calculate the p-value based on.
 #' @param k The number of lags we wish to employ in the VECM form (default: k=1)
 #' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
 #' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on simulated test statistics. Default is false.

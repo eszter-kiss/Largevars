@@ -15,11 +15,11 @@ sim_function(
 )
 }
 \arguments{
-\item{N}{a number representing the number of time series we want to simulate in the system}
+\item{N}{The number of time series we want to simulate in the system.}
 
-\item{tau}{a number representing the length of the time series we want to simulate in the system}
+\item{tau}{The length of the time series we want to simulate in the system.}
 
-\item{stat_value}{the test statistic value we want to calculate p-value based on}
+\item{stat_value}{The test statistic value we want to calculate the p-value based on.}
 
 \item{k}{The number of lags we wish to employ in the VECM form (default: k=1)}
 
