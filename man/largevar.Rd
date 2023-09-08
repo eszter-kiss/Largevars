@@ -22,12 +22,12 @@ largevar(
 
 \item{plot_output}{A boolean variable indicating whether we wish to generate a plot of the distribution of the eigenvalues. The default value is TRUE.}
 
-\item{significance_level}{Specify the significance level at which the decision about the H0 should be made. The default value is 0.05.}
+\item{significance_level}{Specify the significance level at which the decision about H0 should be made. The default value is 0.05.}
 
 \item{kThe}{number of lags we wish to employ in the VECM form. The default value is k=1.}
 }
 \value{
-A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about the H0 at the significance level specified by the user.
+A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about H0 at the significance level specified by the user.
 }
 \description{
 Runs the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150

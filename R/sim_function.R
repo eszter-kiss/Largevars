@@ -1,21 +1,23 @@
 #' Cointegration test for settings of large N and T
 #'
 #' Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
-#' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
+#' @param N a number representing the number of time series we want to simulate in the system
+#' @param tau a number representing the length of the time series we want to simulate in the system
+#' @param stat_value the test statistic value we want to calculate p-value based on
 #' @param k The number of lags we wish to employ in the VECM form (default: k=1)
 #' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
-#' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false.
+#' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on simulated test statistics. Default is false.
 #' @param sim_num The number of simulations that the function conducts for H_0 (the function is slow!). Default is 1000.
 #' @examples
-#' result <- sim_function(data,k=1,r=1,sim_num=2000)
-#' @return A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic for the original data) and a histogram.
+#' result <- sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=2000)
+#' @return A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.
 #' @export
 #'
 
-sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=1000){
+sim_function <- function(N=NULL, tau=NULL,stat_value=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=1000){
 
   # Stopping conditions
-  error_indicator <- check_input_simfun(data,k,r,fin_sample_corr, sim_num)
+  error_indicator <- check_input_simfun(N,tau,stat_value,k,r,fin_sample_corr,sim_num)
   if(error_indicator == 1){
     stop()
   }
@@ -28,10 +30,8 @@ sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=100
   ############################
 
   # extract parameters based on data input
-  ss = dim(data)
-  tau = ss[1]
   t = tau-1
-  N =ss[2]
+
 
   #simulation loop
   stat_vec <- matrix(0,sim_num,1)
@@ -68,7 +68,7 @@ sim_function <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=100
     flush.console()
    }
 
-  x <- largevar_scel(data,k,r,fin_sample_corr)
+  x <- stat_value
 
   values <- stat_vec[,1]
   percentage <- (length(values[values > x]))/sim_num

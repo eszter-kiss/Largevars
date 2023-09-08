@@ -5,7 +5,9 @@
 \title{Cointegration test for settings of large N and T}
 \usage{
 sim_function(
-  data = NULL,
+  N = NULL,
+  tau = NULL,
+  stat_value = NULL,
   k = 1,
   r = 1,
   fin_sample_corr = FALSE,
@@ -13,22 +15,26 @@ sim_function(
 )
 }
 \arguments{
-\item{data}{a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships}
+\item{N}{a number representing the number of time series we want to simulate in the system}
+
+\item{tau}{a number representing the length of the time series we want to simulate in the system}
+
+\item{stat_value}{the test statistic value we want to calculate p-value based on}
 
 \item{k}{The number of lags we wish to employ in the VECM form (default: k=1)}
 
 \item{r}{The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)}
 
-\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false.}
+\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on simulated test statistics. Default is false.}
 
 \item{sim_num}{The number of simulations that the function conducts for H_0 (the function is slow!). Default is 1000.}
 }
 \value{
-A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic for the original data) and a histogram.
+A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.
 }
 \description{
 Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 }
 \examples{
-result <- sim_function(data,k=1,r=1,sim_num=2000)
+result <- sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=2000)
 }

@@ -6,10 +6,10 @@
 #' @param r The number of cointegrating relationships we impose on the H1 hypothesis. The default value is r=1.
 #' @param fin_sample_corr  A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. The default value is FALSE.
 #' @param plot_output A boolean variable indicating whether we wish to generate a plot of the distribution of the eigenvalues. The default value is TRUE.
-#' @param significance_level Specify the significance level at which the decision about the H0 should be made. The default value is 0.05.
+#' @param significance_level Specify the significance level at which the decision about H0 should be made. The default value is 0.05.
 #' @examples
 #' result <- largevar(data=data,k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05);
-#' @return A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about the H0 at the significance level specified by the user.
+#' @return A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about H0 at the significance level specified by the user.
 #' @export
 #'
 

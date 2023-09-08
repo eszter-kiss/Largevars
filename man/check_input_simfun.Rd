@@ -4,10 +4,14 @@
 \alias{check_input_simfun}
 \title{Cointegration test for settings of large N and T}
 \usage{
-check_input_simfun(data, k, r, fin_sample_corr, sim_num)
+check_input_simfun(N, tau, stat_value, k, r, fin_sample_corr, sim_num)
 }
 \arguments{
-\item{data}{a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships}
+\item{N}{a number representing the number of time series we want to simulate in the system}
+
+\item{tau}{a number representing the length of the time series we want to simulate in the system}
+
+\item{stat_value}{the test statistic value we want to calculate p-value based on}
 
 \item{k}{The number of lags we wish to employ in the VECM form (default: k=1)}
 

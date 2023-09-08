@@ -16,6 +16,6 @@ setMethod("show", "stat_test", function(object) {
   cat("Test statistic:", object$statistic ,"\n")
   cat(object$significance_test$text,"\n")
   if (object$r<=10){
-  cat("Decision about the H0: ", object$significance_test$boolean_decision,"\n")
+  cat("Decision about H0: ", object$significance_test$boolean_decision,"\n")
   }
 })
