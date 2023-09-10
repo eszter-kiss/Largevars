@@ -1,13 +1,13 @@
 #' Cointegration test for settings of large N and T
 #'
 #' Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
-#' @param N  The number of time series we want to simulate in the system.
-#' @param tau  The length of the time series we want to simulate in the system.
-#' @param stat_value The test statistic value we want to calculate the p-value based on.
-#' @param k The number of lags we wish to employ in the VECM form (default: k=1)
-#' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
-#' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on simulated test statistics. Default is false.
-#' @param sim_num The number of simulations that the function conducts for H_0 (the function is slow!). Default is 1000.
+#' @param N  The number of time series used in simulations.
+#' @param tau  The length of the time series used in simulations.
+#' @param stat_value The test statistic value for which the p-value is calculated.
+#' @param k The number of lags that we wish to employ in the vector autoregression. The default value is k = 1.
+#' @param r The number of largest eigenvalues used in the test. The default value is r = 1.
+#' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistics. The default value is fin_sample_corr = FALSE.
+#' @param sim_num The number of simulations that the function conducts for H0. The default value is sim_num = 1000.
 #' @examples
 #' result <- sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=2000)
 #' @return A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.

@@ -15,19 +15,19 @@ sim_function(
 )
 }
 \arguments{
-\item{N}{The number of time series we want to simulate in the system.}
+\item{N}{The number of time series used in simulations.}
 
-\item{tau}{The length of the time series we want to simulate in the system.}
+\item{tau}{The length of the time series used in simulations.}
 
-\item{stat_value}{The test statistic value we want to calculate the p-value based on.}
+\item{stat_value}{The test statistic value for which the p-value is calculated.}
 
-\item{k}{The number of lags we wish to employ in the VECM form (default: k=1)}
+\item{k}{The number of lags that we wish to employ in the vector autoregression. The default value is k = 1.}
 
-\item{r}{The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)}
+\item{r}{The number of largest eigenvalues used in the test. The default value is r = 1.}
 
-\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on simulated test statistics. Default is false.}
+\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistics. The default value is fin_sample_corr = FALSE.}
 
-\item{sim_num}{The number of simulations that the function conducts for H_0 (the function is slow!). Default is 1000.}
+\item{sim_num}{The number of simulations that the function conducts for H0. The default value is sim_num = 1000.}
 }
 \value{
 A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.

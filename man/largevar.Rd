@@ -14,17 +14,17 @@ largevar(
 )
 }
 \arguments{
-\item{data}{A numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships.}
+\item{data}{A numeric matrix where the columns contain individual time series that will be examined for the presence of cointegrating relationships.}
 
-\item{r}{The number of cointegrating relationships we impose on the H1 hypothesis. The default value is r=1.}
+\item{k}{The number of lags that we wish to employ in the vector autoregression. The default value is k = 1.}
 
-\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. The default value is FALSE.}
+\item{r}{The number of largest eigenvalues used in the test. The default value is r = 1.}
 
-\item{plot_output}{A boolean variable indicating whether we wish to generate a plot of the distribution of the eigenvalues. The default value is TRUE.}
+\item{fin_sample_corr}{A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. The default value is fin_sample_corr = FALSE.}
 
-\item{significance_level}{Specify the significance level at which the decision about H0 should be made. The default value is 0.05.}
+\item{plot_output}{A boolean variable indicating whether we wish to generate a plot of the empirical distribution of eigenvalues. The default value plot_output = TRUE.}
 
-\item{kThe}{number of lags we wish to employ in the VECM form. The default value is k=1.}
+\item{significance_level}{Specify the significance level at which the decision about H0 should be made. The default value is significance_level = 0.05.}
 }
 \value{
 A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about H0 at the significance level specified by the user.
@@ -33,5 +33,5 @@ A list that contains the test statistic, a table with theoretical quantiles pres
 Runs the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 }
 \examples{
-result <- largevar(data=data,k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05);
+result <- largevar(data=data,k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05)
 }
