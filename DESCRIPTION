@@ -5,7 +5,10 @@ Version: 0.1.0
 Authors@R: 
   c(person(given = "Anna", family = "Bykhovskaya", role = "aut", email = "anna.bykhovskaya@duke.edu"),
     person(given = "Vadim", family = "Gorin", role = "aut", email = "vadicgor@gmail.com"),
-    person(given = "Eszter", family = "Kiss", role = "aut", email = "ekiss2803@gmail.com"))
+    person(given = "Eszter", family = "Kiss", role = c("cre", "aut"), email = "ekiss2803@gmail.com"))
+Author: Anna Bykhovskaya  Developer [aut],
+  Vadim Gorin [aut],
+  Eszter Kiss [aut, cre]
 Maintainer: Eszter Kiss <ekiss2803@gmail.com>
 Description: Runs the Bykhovskaya-Gorin test for cointegration and does simulations for the proxy H0 (https://doi.org/10.48550/arXiv.2202.07150).
 Encoding: UTF-8
@@ -14,6 +17,8 @@ RoxygenNote: 7.3.2
 Depends: 
     R (>= 2.10)
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble (>= 3.0.0),
+    data.table (>= 1.14.0)
 Config/testthat/edition: 3
 License: MIT + file LICENSE

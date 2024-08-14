@@ -1,26 +1,24 @@
-#' Cointegration test for settings of large N and T
-#'
+#' @title Creates the quantile table output for largevar function
+#' @description
 #' Outputs the quantile tables from the package's corresponding vignette.
+#'
 #' @param r   Which partial sum the quantile table should be returned for. (Only r<=10 is available.) Default is r=1.
 #' @examples
 #' quantile_tables(r=3)
-#' @return A numeric matrix.
+#' @returns A numeric matrix.
 #' @export
-#'
-
 quantile_tables <- function(r=1){
 
   # Stopping conditions
   if((is.numeric(r)==FALSE)|(length(r) == 1)==FALSE){
-    print("`r` must be a number.")
-    stop()
+    stop("`r` must be a number.")
+
   }else if(((r%%1==0)==FALSE)|((r>0)==FALSE)){
-    print("`r` must be a positive integer.")
-    stop()
+    stop("`r` must be a positive integer.")
+
   }else if  ( r>10 ){
-    print("No quantile table is available for r>10.")
-    stop()
-  }  else{ #if none of the above fails
+    stop("No quantile table is available for r>10.")
+
   }
 
   percentiles <- as.matrix(percentiles)

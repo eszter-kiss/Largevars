@@ -2,7 +2,7 @@
 % Please edit documentation in R/internals.R
 \name{largevar_scel}
 \alias{largevar_scel}
-\title{Cointegration test for settings of large N and T}
+\title{Internal skeleton function of cointegration test for simfun function}
 \usage{
 largevar_scel(data, k, r, fin_sample_corr)
 }

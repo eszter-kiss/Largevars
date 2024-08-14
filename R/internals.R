@@ -1,13 +1,13 @@
-#' Cointegration test for settings of large N and T
-#'
+#' @title Internal skeleton function of cointegration test for simfun function
+#' @description
 #' This is the "skeleton" version of the largevar function in the package. It is called within the sim_function function to make runtime faster. For the actual cointegration test, use the largevar function.
+#'
 #' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
 #' @param k The number of lags we wish to employ in the VECM form (default: k=1)
 #' @param r The number of cointegrating relationships we impose on the H1 hypothesis (default: r=1)
 #' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistic. Default is false.
-#' @return The test statistic.
+#' @returns The test statistic.
 #' @keywords internal
-
 largevar_scel <- function(data,k,r,fin_sample_corr){
 
   #parameters extracted based on data input that we need

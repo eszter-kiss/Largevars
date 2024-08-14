@@ -1,6 +1,7 @@
-#' Cointegration test for settings of large N and T
-#'
+#' @title Cointegration test for settings of large N and T
+#' @description
 #' Runs the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
+#'
 #' @param data A numeric matrix where the columns contain individual time series that will be examined for the presence of cointegrating relationships.
 #' @param k The number of lags that we wish to employ in the vector autoregression. The default value is k = 1.
 #' @param r The number of largest eigenvalues used in the test. The default value is r = 1.
@@ -8,18 +9,13 @@
 #' @param plot_output A boolean variable indicating whether we wish to generate a plot of the empirical distribution of eigenvalues. The default value plot_output = TRUE.
 #' @param significance_level Specify the significance level at which the decision about H0 should be made. The default value is significance_level = 0.05.
 #' @examples
-#' result <- largevar(data=data,k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05)
-#' @return A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about H0 at the significance level specified by the user.
+#' largevar(data=matrix(rnorm(60, mean = 0.05, sd = 0.01),20,3),k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05)
+#' @returns A list that contains the test statistic, a table with theoretical quantiles presented for r=1 to r=10, and the decision about H0 at the significance level specified by the user.
 #' @export
-#'
-
-largevar <- function(data,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, significance_level = 0.05){
+largevar <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRUE, significance_level = 0.05){
 
 # Stopping conditions
-  error_indicator <- check_input_largevar(data,k,r, fin_sample_corr, plot_output, significance_level)
-    if(error_indicator == 1){
-    stop()
-  }
+  check_input_largevar(data,k,r, fin_sample_corr, plot_output, significance_level)
 
 #parameters based on data
      ss = dim(data)

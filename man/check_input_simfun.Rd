@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_input_simfun.R
 \name{check_input_simfun}
 \alias{check_input_simfun}
-\title{Cointegration test for settings of large N and T}
+\title{Input checker for simfun function}
 \usage{
 check_input_simfun(N, tau, stat_value, k, r, fin_sample_corr, sim_num)
 }
@@ -19,7 +19,10 @@ check_input_simfun(N, tau, stat_value, k, r, fin_sample_corr, sim_num)
 
 \item{sim_num}{The number of simulation we wish to run.}
 }
+\value{
+Nothing (or warning message) if all inputs are correct, and an error message otherwise.
+}
 \description{
-This is an internal function that checks the validity of the inputs of the sim_function function.
+This is an internal function that checks the validity of the inputs of the sim function function.
 }
 \keyword{internal}

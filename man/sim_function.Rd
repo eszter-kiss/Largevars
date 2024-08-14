@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_function.R
 \name{sim_function}
 \alias{sim_function}
-\title{Cointegration test for settings of large N and T}
+\title{Empirical p-value for cointegration test}
 \usage{
 sim_function(
   N = NULL,
@@ -36,5 +36,5 @@ A list that contains the simulation values, the empirical percentage (realizatio
 Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 }
 \examples{
-result <- sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=2000)
+sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=50)
 }

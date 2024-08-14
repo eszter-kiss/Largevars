@@ -1,6 +1,7 @@
-#' Cointegration test for settings of large N and T
+#' @title Empirical p-value for cointegration test
+#' @description
+#'  Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 #'
-#' Runs a simulation on the H0 for the Bykhovskaya-Gorin test for cointegration and returns an empirical p-value. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 #' @param N  The number of time series used in simulations.
 #' @param tau  The length of the time series used in simulations.
 #' @param stat_value The test statistic value for which the p-value is calculated.
@@ -9,18 +10,13 @@
 #' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistics. The default value is fin_sample_corr = FALSE.
 #' @param sim_num The number of simulations that the function conducts for H0. The default value is sim_num = 1000.
 #' @examples
-#' result <- sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=2000)
-#' @return A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.
+#' sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=50)
+#' @returns A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.
 #' @export
-#'
-
 sim_function <- function(N=NULL, tau=NULL,stat_value=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=1000){
 
-  # Stopping conditions
-  error_indicator <- check_input_simfun(N,tau,stat_value,k,r,fin_sample_corr,sim_num)
-  if(error_indicator == 1){
-    stop()
-  }
+# Stopping conditions
+  check_input_simfun(N,tau,stat_value,k,r,fin_sample_corr,sim_num)
 
   print("This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations.")
 

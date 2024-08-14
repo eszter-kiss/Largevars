@@ -2,7 +2,7 @@
 % Please edit documentation in R/quantile_tables.R
 \name{quantile_tables}
 \alias{quantile_tables}
-\title{Cointegration test for settings of large N and T}
+\title{Creates the quantile table output for largevar function}
 \usage{
 quantile_tables(r = 1)
 }
