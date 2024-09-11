@@ -1,4 +1,6 @@
 # Define the class for the output list of largevar function
+## Source: https://stackoverflow.com/a/15046810
+
 setClass("stat_test", representation("list"))
 
 # Define the custom show method

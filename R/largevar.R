@@ -132,8 +132,7 @@ largevar <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRU
       list_table <- list("significance_table"=table,"Statistical decision"=decision)
 
     if (r<=10){
-          #  statistical table output: as default give only the row corresponding to r
-          #significance_table_row <- table[r,]
+      #  statistical table output: as default give only the row corresponding to r
       significance_table_row <- cbind(t(table[r,1:3]),table[r,4])
       colnames(significance_table_row) <- c("10% Critical value", "5% Critical value", "1% Critical value", "Test stat.")
       rownames(significance_table_row) <- ""

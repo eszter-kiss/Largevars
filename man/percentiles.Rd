@@ -11,7 +11,7 @@ A data frame with 99 rows and 11 variables:
 Calculated through own simulations (see details in Section 4 of vignette).
 }
 \description{
-A dataframe containing the simulated quantiles for the test statistic used in
+A data frame containing the simulated quantiles for the test statistic used in
  the largevar function. More details about how these simulations were conducted
  can be found in Section 4 of the vignette.
 }

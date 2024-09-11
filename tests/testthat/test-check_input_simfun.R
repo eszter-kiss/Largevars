@@ -11,6 +11,8 @@ test_that("checks running as intended when all inputs are correct", {
   expect_silent(check_input_simfun(10, 100, 1.5, 1, 1, FALSE, 100))
 })
 
+
+### Checks for input N
 test_that("N input checker works", {
   # Test for NULL N
   expect_error(
@@ -41,6 +43,7 @@ test_that("N input checker works", {
   )
 })
 
+### Checks for input tau
 test_that("tau input checker works", {
   # Test for NULL tau
   expect_error(
@@ -71,6 +74,8 @@ test_that("tau input checker works", {
   )
 })
 
+
+### Checks for input stat_value
 test_that("stat_value input checker works", {
   # Test for NULL stat_value
   expect_error(
@@ -90,6 +95,7 @@ test_that("stat_value input checker works", {
   )
 })
 
+### Checks for input k
 test_that("k input checker works", {
   # Test for non-numeric k
   expect_error(
@@ -120,6 +126,7 @@ test_that("k input checker works", {
   )
 })
 
+### Checks for input r
 test_that("r input checker works", {
   # Test for non-numeric r
   expect_error(
@@ -155,6 +162,7 @@ test_that("r input checker works", {
   )
 })
 
+### Checks for input fin_sample_corr
 test_that("fin_sample_corr input checker works", {
   # Test for non-boolean fin_sample_corr
   expect_error(
@@ -182,6 +190,7 @@ test_that("fin_sample_corr input checker works", {
   )
 })
 
+### Checks for input sim_num
 test_that("sim_num input checker works", {
   # Test for non-numeric sim_num
   expect_error(

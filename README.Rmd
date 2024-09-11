@@ -5,7 +5,7 @@ bibliography: vignette_biblio.bib
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```r
+```{r}
 #include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -28,7 +28,7 @@ based on the large $N,T$ asymptotics of @bykhovskaya_gorin_1, @bykhovskaya_gorin
 
 You can install the latest version of Largevars from Github:
 
-```r
+```{r}
 library(devtools)
 install_github("eszter-kiss/Largevars")
 library(Largevars)
@@ -42,9 +42,7 @@ We use logarithms of weekly adjusted closing prices of assets in the S\&P100 ove
 
 
 
-```r
-
-#example}
+```{r}
 library(Largevars)
 
 ## load data
@@ -71,8 +69,7 @@ result
 
 If we want to individually access certain values from the output list, we can do it in the usual way, by referencing the elements of the list:
 
-```r
-# example continued}
+```{r}
 result$statistic
 result$significance_test$p_value
 result$significance_test$boolean_decision
@@ -81,9 +78,9 @@ result$significance_test$significance_table
 
 If we want to see empirical p-value, we can use the following function:
 
-```r
+```{r}
 result2 <- sim_function(N=92,tau=522,stat_value=-0.2777,k=1,r=1,
-			   fin_sample_corr = FALSE,sim_num=1000)
+			   fin_sample_corr = FALSE,sim_num=50)
 result2
 ```
 
@@ -99,7 +96,7 @@ Eszter Kiss (Duke University) ekiss2803\@gmail.com
 
 ## Cite our package
 
-```r
+```{r}
 citation("Largevars")
 ```
 

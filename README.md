@@ -30,7 +30,10 @@ You can install the latest version of Largevars from Github:
 
 ``` r
 library(devtools)
+#> Loading required package: usethis
 install_github("eszter-kiss/Largevars")
+#> Skipping install of 'Largevars' from a github remote, the SHA1 (d76ef4d0) has not changed since last install.
+#>   Use `force = TRUE` to force installation
 library(Largevars)
 ```
 
@@ -49,8 +52,6 @@ $T/N  \approx 5.66$. The data that we use are accessible from the
 \`\`data’’ folder in the package.
 
 ``` r
-
-#example}
 library(Largevars)
 
 ## load data
@@ -70,28 +71,68 @@ dataSP <- as.matrix(dataSP)
 ### Save the function output (list)
 result <- largevar(data=dataSP,k=1,r=1,fin_sample_corr = FALSE,
       plot_output=TRUE,significance_level=0.05)
+```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+
+``` r
 
 ### Display the result
 result
+#> Output for the largevars function 
+#> =================================== 
+#> Cointegration test for high-dimensional VAR(k)                  T= 521 , N= 92 
+#> 
+#> 10% Critical value  5% Critical value  1% Critical value         Test stat. 
+#>               0.45               0.98               2.02              -0.28 
+#> 
+#> If the test statistic is larger than the quantile, reject H0 at the chosen level. 
+#> ============================================================================ 
+#> Test statistic: -0.2777314 
+#> The p-value is 0.23 
+#> Decision about H0:  0
 ```
 
 If we want to individually access certain values from the output list,
 we can do it in the usual way, by referencing the elements of the list:
 
 ``` r
-# example continued}
 result$statistic
+#> [1] -0.2777314
 result$significance_test$p_value
+#> [1] 0.23
 result$significance_test$boolean_decision
+#> [1] 0
 result$significance_test$significance_table
+#>      10% Critical value 5% Critical value 1% Critical value  Test stat.
+#> r=1                0.45              0.98              2.02  -0.2777314
+#> r=2               -1.87             -1.09              0.42  -1.4995879
+#> r=3               -5.90             -4.90             -2.99  -5.4154889
+#> r=4              -11.35            -10.15             -7.87 -10.5527603
+#> r=5              -18.07            -16.69            -14.07 -16.7460847
+#> r=6              -25.95            -24.40            -21.45 -23.2178976
+#> r=7              -34.90            -33.19            -29.95 -31.1080001
+#> r=8              -44.88            -43.01            -39.47 -39.3197363
+#> r=9              -55.82            -53.80            -49.99 -49.8419822
+#> r=10             -67.70            -65.53            -61.45 -60.4894485
 ```
 
 If we want to see empirical p-value, we can use the following function:
 
 ``` r
 result2 <- sim_function(N=92,tau=522,stat_value=-0.2777,k=1,r=1,
-               fin_sample_corr = FALSE,sim_num=1000)
+               fin_sample_corr = FALSE,sim_num=50)
+#> [1] "This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations."
+#> |=                                                                         |  2%  |===                                                                       |  4%  |====                                                                      |  6%  |======                                                                    |  8%  |=======                                                                   | 10%  |=========                                                                 | 12%  |==========                                                                | 14%  |============                                                              | 16%  |=============                                                             | 18%  |===============                                                           | 20%  |================                                                          | 22%  |==================                                                        | 24%  |===================                                                       | 26%  |=====================                                                     | 28%  |======================                                                    | 30%  |========================                                                  | 32%  |=========================                                                 | 34%  |===========================                                               | 36%  |============================                                              | 38%  |==============================                                            | 40%  |===============================                                           | 42%  |=================================                                         | 44%  |==================================                                        | 46%  |====================================                                      | 48%  |=====================================                                     | 50%  |======================================                                    | 52%  |========================================                                  | 54%  |=========================================                                 | 56%  |===========================================                               | 58%  |============================================                              | 60%  |==============================================                            | 62%  |===============================================                           | 64%  |=================================================                         | 66%  |==================================================                        | 68%  |====================================================                      | 70%  |=====================================================                     | 72%  |=======================================================                   | 74%  |========================================================                  | 76%  |==========================================================                | 78%  |===========================================================               | 80%  |=============================================================             | 82%  |==============================================================            | 84%  |================================================================          | 86%  |=================================================================         | 88%  |===================================================================       | 90%  |====================================================================      | 92%  |======================================================================    | 94%  |=======================================================================   | 96%  |========================================================================= | 98%  |==========================================================================|100%  
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+``` r
 result2
+#> Output for the sim_function function 
+#> =================================== 
+#> The empirical p-value is  0.22
 ```
 
 ## Authors
@@ -106,6 +147,19 @@ Eszter Kiss (Duke University) ekiss2803@gmail.com
 
 ``` r
 citation("Largevars")
+#> To cite Largevars in publications use:
+#> 
+#>   Bykhovskaya A, Gorin V, Kiss E (2024). "Largevars: An R Package for
+#>   Testing Large VARs for the Presence of Cointegration." _TBD_.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{largevarspaper,
+#>     title = {Largevars: An R Package for Testing Large VARs for the Presence of Cointegration},
+#>     author = {Anna Bykhovskaya and Vadim Gorin and Eszter Kiss},
+#>     journal = {TBD},
+#>     year = {2024},
+#>   }
 ```
 
 ## License

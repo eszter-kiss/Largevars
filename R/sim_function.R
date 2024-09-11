@@ -13,65 +13,78 @@
 #' sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=50)
 #' @returns A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.
 #' @export
-sim_function <- function(N=NULL, tau=NULL,stat_value=NULL,k=1,r=1, fin_sample_corr = FALSE, sim_num=1000){
+sim_function <- function(N = NULL,
+                         tau = NULL,
+                         stat_value = NULL,
+                         k = 1,
+                         r = 1,
+                         fin_sample_corr = FALSE,
+                         sim_num = 1000) {
+  # Stopping conditions
+  check_input_simfun(N, tau, stat_value, k, r, fin_sample_corr, sim_num)
 
-# Stopping conditions
-  check_input_simfun(N,tau,stat_value,k,r,fin_sample_corr,sim_num)
-
-  print("This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations.")
+  print(
+    "This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations."
+  )
 
   ### this is for progress bar
   options(width = 80)
   n <- sim_num
-  ############################
+  ###
 
   # extract parameters based on data input
-  t = tau-1
-
+  t = tau - 1
 
   #simulation loop
-  stat_vec <- matrix(0,sim_num,1)
-  for (j in 1:sim_num){
+  stat_vec <- matrix(0, sim_num, 1)
+  for (j in 1:sim_num) {
     X_tilde <- matrix(0, N, tau)
     dX <- matrix(rnorm(N * tau), N, tau)
 
-    for (i in 2:tau){
-      if (i == 2){
-        X_tilde[,2] <- dX[,1]
+    for (i in 2:tau) {
+      if (i == 2) {
+        X_tilde[, 2] <- dX[, 1]
       }
-      if (i>2){
+      if (i > 2) {
         X_tilde[, i] <- rowSums(dX[, 1:(i - 1)])
       }
     }
 
-    data_sim <- t(X_tilde) #change to N,T layout because that is the format that largevar() asks for: input is going to be X_tilde
+    #change to N,T layout because that is the format that largevar() asks for: input is X_tilde
+    data_sim <- t(X_tilde)
 
-    output <- largevar_scel(data_sim,k,r,fin_sample_corr)
-    stat_vec[j,1]<-output
+    output <- largevar_scel(data_sim, k, r, fin_sample_corr)
+    stat_vec[j, 1] <- output
 
-    # #progress report on simulation
-    # if(j%%100==0){
-    #   base::print(paste("Simulation loop is at",j))
-    # }
 
+    # Display a progress bar for the function
+    ### Source: https://stackoverflow.com/a/26920123
     ii <- j
     extra <- nchar('||100%')
     width <- options()$width
     step <- round(ii / n * (width - extra))
-    text <- sprintf('|%s%s|% 3s%%', strrep('=', step),
-                       strrep(' ', width - step - extra), round(ii / n * 100))
+    text <- sprintf('|%s%s|% 3s%%',
+                    strrep('=', step),
+                    strrep(' ', width - step - extra),
+                    round(ii / n * 100))
     cat(text, " \r")
     flush.console()
-   }
+    ###
+  }
+
 
   x <- stat_value
 
-  values <- stat_vec[,1]
-  percentage <- (length(values[values > x]))/sim_num
+  values <- stat_vec[, 1]
+  percentage <- (length(values[values > x])) / sim_num
 
-  plot <- hist(values,breaks=2*(ceiling(log2(length(values)))+1))
-  abline(v=x,col="red",lwd=3)
+  plot <- hist(values, breaks = 2 * (ceiling(log2(length(
+    values
+  ))) + 1))
+  abline(v = x, col = "red", lwd = 3)
 
-  list <- list("sim_results"=stat_vec,"empirical_percentage"=percentage,plot)
+  list <- list("sim_results" = stat_vec,
+               "empirical_percentage" = percentage,
+               plot)
   new("simfun_output", list)
 }

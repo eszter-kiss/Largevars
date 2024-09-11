@@ -11,6 +11,7 @@ test_that("checks running as intended when all inputs correct", {
     expect_silent(check_input_largevar(matrix(1:20, nrow=10, ncol=2), 1, 1, FALSE, TRUE, 0.05))
 })
 
+### Checks for input data
 test_that("data input checker works", {
   # Test for NULL data
   expect_error(
@@ -67,6 +68,7 @@ test_that("data input checker works", {
 })
 
 
+### Checks for input k
 test_that("k input checker works", {
   # non-number errors
   expect_error(
@@ -102,6 +104,7 @@ test_that("k input checker works", {
 
 
 
+### Checks for input r
 test_that("r input checker works", {
   # Test with non-numeric `r` values
   expect_error(
@@ -149,6 +152,7 @@ test_that("r input checker works", {
 })
 
 
+### Checks for input fin_sample_corr
 test_that("fin_sample_corr input checker works", {
   # Test with non-boolean `fin_sample_corr` values
   expect_error(
@@ -177,6 +181,7 @@ test_that("fin_sample_corr input checker works", {
 })
 
 
+### Checks for input plot_output
 test_that("plot_output input checker works", {
   # Test with non-boolean `plot_output` values
   expect_error(
@@ -206,6 +211,7 @@ test_that("plot_output input checker works", {
 
 
 
+### Checks for input significance_level
 test_that("significance_level input checker works", {
   # Test with non-numeric `significance_level` values
   expect_error(

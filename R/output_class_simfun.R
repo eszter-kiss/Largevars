@@ -1,4 +1,6 @@
 # Define the class for the output list of sim_function function
+## Source: https://stackoverflow.com/a/15046810
+
 setClass("simfun_output", representation("list"))
 
 # Define the custom show method
