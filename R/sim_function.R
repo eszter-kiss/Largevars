@@ -10,8 +10,11 @@
 #' @param fin_sample_corr A boolean variable indicating whether we wish to employ finite sample correction on our test statistics. The default value is fin_sample_corr = FALSE.
 #' @param sim_num The number of simulations that the function conducts for H0. The default value is sim_num = 1000.
 #' @examples
-#' sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=50)
+#' sim_function(N=90, tau=501, stat_value=-0.27,k=1,r=1,sim_num=30)
 #' @returns A list that contains the simulation values, the empirical percentage (realizations larger than the test statistic provided by the user) and a histogram.
+#' @importFrom graphics hist abline
+#' @importFrom stats rnorm
+#' @importFrom utils flush.console
 #' @export
 sim_function <- function(N = NULL,
                          tau = NULL,
@@ -23,12 +26,14 @@ sim_function <- function(N = NULL,
   # Stopping conditions
   check_input_simfun(N, tau, stat_value, k, r, fin_sample_corr, sim_num)
 
-  print(
-    "This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations."
-  )
+  message("This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations.")
 
-  ### this is for progress bar
-  options(width = 80)
+
+  # # Progress bar for the function: this may get implemented in
+  # # an improved, user-friendly form later
+  # options(width = 80)
+
+
   n <- sim_num
   ###
 
@@ -56,22 +61,22 @@ sim_function <- function(N = NULL,
     output <- largevar_scel(data_sim, k, r, fin_sample_corr)
     stat_vec[j, 1] <- output
 
-
-    # Display a progress bar for the function
-    ### Source: https://stackoverflow.com/a/26920123
-    ii <- j
-    extra <- nchar('||100%')
-    width <- options()$width
-    step <- round(ii / n * (width - extra))
-    text <- sprintf('|%s%s|% 3s%%',
-                    strrep('=', step),
-                    strrep(' ', width - step - extra),
-                    round(ii / n * 100))
-    cat(text, " \r")
-    flush.console()
-    ###
+    # # Display a progress bar for the function: this may get implemented in
+    # # an improved, user-friendly form later (will be suppressed optionally,
+    # will not modify the environment of the user such as width).
+    # ### Source: https://stackoverflow.com/a/26920123
+    # ii <- j
+    # extra <- nchar('||100%')
+    # width <- options()$width
+    # step <- round(ii / n * (width - extra))
+    # text <- sprintf('|%s%s|% 3s%%',
+    #                 strrep('=', step),
+    #                 strrep(' ', width - step - extra),
+    #                 round(ii / n * 100))
+    # cat(text, " \r")
+    # flush.console()
+    # ###
   }
-
 
   x <- stat_value
 

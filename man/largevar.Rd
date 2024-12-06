@@ -33,5 +33,12 @@ A list that contains the test statistic, a table with theoretical quantiles pres
 Runs the Bykhovskaya-Gorin test for cointegration. Paper can be found at: https://doi.org/10.48550/arXiv.2202.07150
 }
 \examples{
-largevar(data=matrix(rnorm(60, mean = 0.05, sd = 0.01),20,3),k=1,r=1,fin_sample_corr=FALSE, plot_output=FALSE,significance_level=0.05)
+largevar(
+  data = matrix(rnorm(60, mean = 0.05, sd = 0.01), 20, 3),
+  k = 1,
+  r = 1,
+  fin_sample_corr = FALSE,
+  plot_output = FALSE,
+  significance_level = 0.05
+)
 }

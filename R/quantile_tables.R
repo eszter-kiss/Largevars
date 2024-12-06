@@ -18,9 +18,9 @@ quantile_tables <- function(r=1){
 
   }else if  ( r>10 ){
     stop("No quantile table is available for r>10.")
-
   }
 
+  percentiles <- get("percentiles", envir = asNamespace("Largevars"))
   percentiles <- as.matrix(percentiles)
   values <- c(-Inf, percentiles[,r+1])
   quant_table_vignette <- t(matrix(data=values, nrow=10))

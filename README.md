@@ -1,55 +1,37 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-``` r
-#include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-library(knitr)
-```
+
+
 
 # Largevars
 
-The Largevars R package conducts a cointegration test for
-high-dimensional vector autoregressions of order $k$
+The Largevars R package conducts a cointegration test for high-dimensional vector autoregressions of order $k$
+based on the large $N,T$ asymptotics of Bykhovskaya and Gorin (2021, <doi:10.48550/arXiv.2006.14179>), Bykhovskaya and Gorin (2022, <doi:10.48550/arXiv.2202.07150>). The implemented test is a modification of the Johansen likelihood ratio test. In the absence of cointegration the test converges to the partial sum of the Airy$_1$ point process. This package contains simulated quantiles of the first ten partial sums of the Airy$_1$ point process that are precise up to the first $3$ digits.
 
-based on the large $N,T$ asymptotics of Bykhovskaya and Gorin (2022),
-Bykhovskaya and Gorin (2024). The implemented test is a modification of
-the Johansen likelihood ratio test. In the absence of cointegration the
-test converges to the partial sum of the Airy$_1$ point process. This
-package contains simulated quantiles of the first ten partial sums of
-the Airy$_1$ point process that are precise up to the first $3$ digits.
 
 ## Installation
 
 You can install the latest version of Largevars from Github:
 
+
 ``` r
 library(devtools)
-#> Loading required package: usethis
 install_github("eszter-kiss/Largevars")
-#> Skipping install of 'Largevars' from a github remote, the SHA1 (d76ef4d0) has not changed since last install.
-#>   Use `force = TRUE` to force installation
 library(Largevars)
 ```
 
 ## Example
 
-The following example is a replication of the S&P100 example from
-Bykhovskaya and Gorin (2022), Bykhovskaya and Gorin (2024).
+The following example is a replication of the S\&P100 example from  Bykhovskaya and Gorin (2022), Bykhovskaya and Gorin (2024).
 
-We use logarithms of weekly adjusted closing prices of assets in the
-S&P100 over ten years (01.01.2010-01.01.2020), which gives us $\tau=522$
-observations across time. The S&P100 includes 101 stocks, with Google
-having two classes of stocks. We use 92 of those stocks, those for which
-data were available for our chosen time period. Only one of Google’s two
-listed stocks is kept in the sample. Therefore, $N = 92$, $T = 521$ and
-$T/N  \approx 5.66$. The data that we use are accessible from the
-\`\`data’’ folder in the package.
+We use logarithms of weekly adjusted closing prices of assets in the S\&P100 over ten years (01.01.2010-01.01.2020), which gives us $\tau=522$ observations across time. The S\&P100 includes 101 stocks, with Google having two classes of stocks. We use 92 of those stocks, those for which data were available for our chosen time period. Only one of Google’s two listed stocks is kept in the sample. Therefore, $N = 92$, $T = 521$ and $T/N  \approx 5.66$. The data that we use are accessible from the `data` folder in the package.
+
+
+
 
 ``` r
 library(Largevars)
@@ -66,6 +48,7 @@ dataSP <- as.matrix(dataSP)
 
 ## Use the package documentation by calling help
 ?largevar
+#> ℹ Rendering development documentation for "largevar"
 
 ## Use largevar function
 ### Save the function output (list)
@@ -73,7 +56,10 @@ result <- largevar(data=dataSP,k=1,r=1,fin_sample_corr = FALSE,
       plot_output=TRUE,significance_level=0.05)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<div class="figure">
+<img src="man/figures/README-unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3" width="100%" />
+<p class="caption">plot of chunk unnamed-chunk-3</p>
+</div>
 
 ``` r
 
@@ -93,8 +79,8 @@ result
 #> Decision about H0:  0
 ```
 
-If we want to individually access certain values from the output list,
-we can do it in the usual way, by referencing the elements of the list:
+If we want to individually access certain values from the output list, we can do it in the usual way, by referencing the elements of the list:
+
 
 ``` r
 result$statistic
@@ -117,40 +103,51 @@ result$significance_test$significance_table
 #> r=10             -67.70            -65.53            -61.45 -60.4894485
 ```
 
-If we want to see empirical p-value, we can use the following function:
+If we want to see an empirical p-value, we can use the function below. By default, it will print a message to console to remind the user that precise computations of the statistics need a large number of simulation iterations. You can suppress this message the usual way, by using the `suppressMessages()` wrapper.
+  
+
 
 ``` r
-result2 <- sim_function(N=92,tau=522,stat_value=-0.2777,k=1,r=1,
-               fin_sample_corr = FALSE,sim_num=50)
-#> [1] "This function should only be used for quick approximate assessments, as precise computations of the statistics need much larger numbers of simulations."
-#> |=                                                                         |  2%  |===                                                                       |  4%  |====                                                                      |  6%  |======                                                                    |  8%  |=======                                                                   | 10%  |=========                                                                 | 12%  |==========                                                                | 14%  |============                                                              | 16%  |=============                                                             | 18%  |===============                                                           | 20%  |================                                                          | 22%  |==================                                                        | 24%  |===================                                                       | 26%  |=====================                                                     | 28%  |======================                                                    | 30%  |========================                                                  | 32%  |=========================                                                 | 34%  |===========================                                               | 36%  |============================                                              | 38%  |==============================                                            | 40%  |===============================                                           | 42%  |=================================                                         | 44%  |==================================                                        | 46%  |====================================                                      | 48%  |=====================================                                     | 50%  |======================================                                    | 52%  |========================================                                  | 54%  |=========================================                                 | 56%  |===========================================                               | 58%  |============================================                              | 60%  |==============================================                            | 62%  |===============================================                           | 64%  |=================================================                         | 66%  |==================================================                        | 68%  |====================================================                      | 70%  |=====================================================                     | 72%  |=======================================================                   | 74%  |========================================================                  | 76%  |==========================================================                | 78%  |===========================================================               | 80%  |=============================================================             | 82%  |==============================================================            | 84%  |================================================================          | 86%  |=================================================================         | 88%  |===================================================================       | 90%  |====================================================================      | 92%  |======================================================================    | 94%  |=======================================================================   | 96%  |========================================================================= | 98%  |==========================================================================|100%  
+# result2 <- sim_function(N=92,tau=522,stat_value=-0.2777,k=1,r=1,
+# 			   fin_sample_corr = FALSE,sim_num=30)
+# result2
+
+# # To provide the function while suppressing messages:
+result3 <- suppressMessages(sim_function(N=92,tau=522,stat_value=-0.2777,k=1,r=1,
+			   fin_sample_corr = FALSE,sim_num=30))
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<div class="figure">
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5" width="100%" />
+<p class="caption">plot of chunk unnamed-chunk-5</p>
+</div>
 
 ``` r
-result2
+result3
 #> Output for the sim_function function 
 #> =================================== 
-#> The empirical p-value is  0.22
+#> The empirical p-value is  0.1
 ```
 
 ## Authors
 
-Anna Bykhovskaya (Duke University) anna.bykhovskaya@duke.edu
+Anna Bykhovskaya (Duke University) anna.bykhovskaya\@duke.edu
 
-Vadim Gorin (University of California at Berkeley) vadicgor@gmail.com
 
-Eszter Kiss (Duke University) ekiss2803@gmail.com
+Vadim Gorin (University of California at Berkeley) vadicgor\@gmail.com
+
+
+Eszter Kiss (Duke University) ekiss2803\@gmail.com
 
 ## Cite our package
+
 
 ``` r
 citation("Largevars")
 #> To cite Largevars in publications use:
 #> 
-#>   Bykhovskaya A, Gorin V, Kiss E (2024). "Largevars: An R Package for
-#>   Testing Large VARs for the Presence of Cointegration." _TBD_.
+#>   Bykhovskaya A, Gorin V, Kiss E (2024). "Largevars: An R Package for Testing Large VARs for the Presence of Cointegration."
+#>   _TBD_.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -165,24 +162,3 @@ citation("Largevars")
 ## License
 
 MIT License (c) 2024
-
-## References
-
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
-
-<div id="ref-bykhovskaya_gorin_1" class="csl-entry">
-
-Bykhovskaya, A., and V. Gorin. 2022. “Cointegration in Large VARs.” *The
-Annals of Statistics* 50 (3): 1593–1617.
-
-</div>
-
-<div id="ref-bykhovskaya_gorin_k" class="csl-entry">
-
-———. 2024. “Asymptotics of Cointegration Tests for High-Dimensional
-VAR($k$).” *Review of Economics and Statistics*.
-
-</div>
-
-</div>
