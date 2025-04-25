@@ -8,7 +8,7 @@ methods::setClass("stat_test", representation("list"))
 
 # Define the custom show method
 methods::setMethod("show", "stat_test", function(object) {
-  cat("Output for the largevars function", "\n")
+  cat("Output for the largevar function", "\n")
   cat("===================================", "\n")
   cat("Cointegration test for high-dimensional VAR(k)                 ","T=", object$t,", N=", object$N,"\n")
   cat("\n")  # Print double dashed line

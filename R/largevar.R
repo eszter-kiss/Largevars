@@ -190,13 +190,44 @@ largevar <- function(data=NULL,k=1,r=1, fin_sample_corr = FALSE, plot_output=TRU
 
   list <- list("statistic"=LR_nt, "measure_upper_bound"=lambda_p, "measure_lower_bound"=lambda_m, "eigenvalues"=ev_values,"significance_test"=list_table,"k"=k,"r"=r,"N"=N,"t"=t)
 
-  if (plot_output==TRUE){ # Plot the function
-    my_function <- function(x){(p+q)*sqrt(pmax(0,(lambda_p-x)*(x-lambda_m)))/x/(1-x)/2/pi}
-    plot <- hist(ev_values, breaks = 2*(ceiling(log2(length(ev_values)))+1), probability = TRUE, col = "lightblue", border = "white", main = paste("VAR(",k,") Eigenvalues"),xlab = "Eigenvalues", ylab = "" ,xlim=c(0,1))
+  if (plot_output==TRUE){
+
+    # theoretical density
+    my_function <- function(x){
+      (p+q)*sqrt(pmax(0,(lambda_p-x)*(x-lambda_m)))/x/(1-x)/2/pi
+      }
+
+    # Set height of graph dynamically: either from histogram height or max. of
+    # theoretical density fun.
+    hist_data <- hist(
+      ev_values,
+      breaks = 2 * (ceiling(log2(length(ev_values))) + 1),
+      plot = FALSE
+    )
+
+    x_vals <- seq(min(hist_data$breaks), max(hist_data$breaks), length.out = 1000)
+    y_vals <- my_function(x_vals)
+    y_max <- max(c(hist_data$density, y_vals), na.rm = TRUE)
+
+    # Final plot with adjusted ylim
+    plot <- hist(
+      ev_values,
+      breaks = hist_data$breaks,
+      probability = TRUE,
+      col = "lightblue",
+      border = "white",
+      main = paste("VAR(", k, ") Eigenvalues"),
+      xlab = "Eigenvalues",
+      ylab = "",
+      xlim = c(0, 1),
+      ylim = c(0, y_max * 1.05)  # 5% buffer
+    )
     curve(my_function,add = TRUE)
 
+    # append plot to output
     list <- append(list,plot)
   }
+
   t <- list # function output
   new("stat_test", t)
 }
