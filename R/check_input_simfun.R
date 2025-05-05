@@ -10,14 +10,15 @@
 #' @param sim_num The number of simulation we wish to run.
 #' @returns Nothing (or warning message) if all inputs are correct, and an error message otherwise.
 #' @keywords internal
-check_input_simfun <- function(N,tau,stat_value,k,r,fin_sample_corr,sim_num, seed){
+check_input_simfun <- function(N, tau, stat_value, k, r, fin_sample_corr, sim_num, seed){
 
   # more obvious input errors
   if (is.null(N) || !is.numeric(N) || length(N) != 1 || N %% 1 != 0 || N <= 0) {
     stop("`N` must be a single positive integer.")
   }
 
-  if (is.null(tau) || !is.numeric(tau) || length(tau) != 1 || tau %% 1 != 0 || tau <= 0) {
+  if (is.null(tau) || !is.numeric(tau) || length(tau) != 1 ||
+      tau %% 1 != 0 || tau <= 0) {
     stop("`tau` must be a single positive integer.")
   }
 
@@ -33,7 +34,8 @@ check_input_simfun <- function(N,tau,stat_value,k,r,fin_sample_corr,sim_num, see
     stop("`r` must be a single positive integer.")
   }
 
-  if (!is.numeric(sim_num) || length(sim_num) != 1 || sim_num %% 1 != 0 || sim_num <= 0) {
+  if (!is.numeric(sim_num) || length(sim_num) != 1 ||
+      sim_num %% 1 != 0 || sim_num <= 0) {
     stop("`sim_num` must be a single positive integer.")
   }
 
@@ -42,21 +44,22 @@ check_input_simfun <- function(N,tau,stat_value,k,r,fin_sample_corr,sim_num, see
   }
 
 
-  if (!is.null(seed) && (!is.numeric(seed) || length(seed) != 1 || seed %% 1 != 0 || seed < 0)) {
+  if (!is.null(seed) && (!is.numeric(seed) || length(seed) != 1 ||
+                         seed %% 1 != 0 || seed < 0)) {
     stop("`seed` must be a single non-negative integer if given.")
   }
 
 
   # less obvious errors
-    if  ( k >= ((tau-1)/N)-1){
+  if  ( k >= ((tau - 1)/N) - 1){
     stop("`k` too large, check dim requirements")
   }
 
-  if  ( r>N){
+  if  ( r > N){
     stop("`r` must be less than or equal to the number of variables in your dataset.")
   }
 
-  if (sim_num>500){
+  if (sim_num > 500){
     warning("Simulation may run for several minutes")
   }
 }

@@ -6,10 +6,9 @@
 ## commented out and distributed this way.
 
 # library(Largevars)
-# library(readr)
-#
+
 # # Load the sample data
-# s_p100_price <- read_csv("data/s_p100_price_adj.csv", show_col_types = FALSE)
+# data("s_p100_price")
 #
 # # Transform data according to researcher needs
 # dataSP <- log(s_p100_price[, seq(2, dim(s_p100_price)[2])])
@@ -24,8 +23,6 @@
 #   statistic = result$statistic,
 #   p_value = result$significance_test$p_value,
 #   boolean_decision = result$significance_test$boolean_decision,
-#   measure_upper_bound = result$measure_upper_bound,
-#   measure_lower_bound = result$measure_lower_bound,
 #   eigenvalues = result$eigenvalues
 # )
 #

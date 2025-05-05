@@ -87,7 +87,7 @@ sim_function <- function(N = NULL,
 
   x <- stat_value
 
-  values <- stat_vec[, 1]
+  values <- stat_vec[ , 1]
   percentage <- (length(values[values > x])) / sim_num
 
   plot <- hist(values, breaks = 2 * (ceiling(log2(length(

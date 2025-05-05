@@ -1,5 +1,5 @@
 #' Input checker for largevar function
-#'
+#' @description
 #' This is an internal function that checks the validity of the inputs of the largevar function.
 #'
 #' @param data a numeric matrix where columns contain the individual time series that will be examined for presence of cointegrating relationships
@@ -10,7 +10,7 @@
 #' @param significance_level Specify the significance level at which the decision about the H0 should be made. For r=1 this can be any level of significance. For r=2 and r=3, the significance level input will be rounded up to the nearest of the following: 0.1, 0.05, 0.025, 0.01. If the significance level is larger than 0.1, the decision will be made at the 10\% level. For r>3 only the test statistic is returned. For an empirical p-value for r>3 use the sim_function fun. in the package.
 #' @returns Nothing (or warning message) if all inputs are correct, and an error message otherwise.
 #' @keywords internal
-check_input_largevar <- function(data,k,r, fin_sample_corr, plot_output, significance_level){
+check_input_largevar <- function(data, k, r, fin_sample_corr, plot_output, significance_level){
 
   # more obvious input errors
   if (is.null(data) || !is.matrix(data) || !is.numeric(data) || ncol(data) < 2) {
@@ -26,7 +26,8 @@ check_input_largevar <- function(data,k,r, fin_sample_corr, plot_output, signifi
   }
 
   if (is.null(significance_level) || !is.numeric(significance_level) ||
-      length(significance_level) != 1 || significance_level <= 0 || significance_level >= 1) {
+      length(significance_level) != 1 || significance_level <= 0 ||
+      significance_level >= 1) {
     stop("`significance_level` must be a single numeric value strictly between 0 and 1.")
   }
 

@@ -1,5 +1,5 @@
 #' @docType data
-#' @name s_p100_price_adj
+#' @name s_p100_price
 #' @title Stock price data for example in vignette
 #' @description
 #' A data frame containing weekly S&P100 prices over ten years: 01.01.2010 - 01.01.2020,
